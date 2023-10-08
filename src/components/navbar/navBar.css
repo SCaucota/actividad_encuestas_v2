@@ -1,0 +1,53 @@
+.navBar{
+    background-color: rgb(185, 195, 223);
+    display: flex;
+    padding: 0.5% 2% 0.5% 2%;
+    margin: 1%;
+    border-radius: 0.5em;
+    justify-content: space-between;
+}
+
+.listaButton{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5em;
+    justify-content: center;
+    align-items: center;
+}
+
+.button{
+    width: 10em;
+    height: 3em;
+    font-size: 1em;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.button:hover{
+    background-color: white;
+    color: black;
+    border: 0px;
+}
+
+.buttonActive{
+    width: 10em;
+    height: 3em;
+    font-size: 1em;
+    background-color: white;
+    color: rgb(92, 91, 91);
+    border: 0px;
+}
+
+.lista{
+    width: 10em;
+    height: 3em;
+    font-size: 1.1em;
+    background-color: rgb(185, 195, 223);
+    border: 0px;
+    cursor: pointer;
+}
+
+.lista:hover{
+    background-color: rgb(169, 182, 220);
+}
