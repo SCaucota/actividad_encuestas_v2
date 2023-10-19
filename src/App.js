@@ -16,7 +16,7 @@ function App() {
     const ultimaEncuesta = listaEncuestas[listaEncuestas.length - 1];
     nuevaEncuesta.id = ultimaEncuesta.id + 1;
     setListaEncuestas([nuevaEncuesta, ...listaEncuestas]);
-  }
+  };
 
   return (
     <BrowserRouter>
@@ -26,7 +26,7 @@ function App() {
         <Route path='/encuesta/:id' element={<Encuesta lista={listaEncuestas}/>}/>
         <Route path='/crearEncuesta' element={<CrearEncuesta agregarEncuesta={agregarEncuesta}/>} />
 
-        <Route path='/error' element={<NotFound/>} />
+        <Route path='*' element={<NotFound/>} />
       </Routes>
     </BrowserRouter>
   );

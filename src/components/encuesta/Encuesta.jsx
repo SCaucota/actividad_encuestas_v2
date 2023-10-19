@@ -30,6 +30,11 @@ const Encuesta = ({ lista }) => {
         });
     };
 
+    const Respuestas = () => {
+        if(opcionSeleccionada === preguntaActual.id)
+        console.log(preguntaActual.opciones);
+    }
+
 
     return (
         <div>
@@ -59,12 +64,15 @@ const Encuesta = ({ lista }) => {
                                     ))
                                 }
                             </div>
-                            <button onClick={handlePreguntaAnterior} disabled={preguntaActualId === 0}>
-                                Pregunta Anterior
-                            </button>
-                            <button onClick={handleSiguientePregunta} disabled={preguntaActualId === encuestaSeleccionada.preguntas.length - 1}>
-                                Siguiente Pregunta
-                            </button>
+                            <div>
+                                <button onClick={handlePreguntaAnterior} disabled={preguntaActualId === 0}>
+                                    Pregunta Anterior
+                                </button>
+                                <button onClick={handleSiguientePregunta} disabled={preguntaActualId === encuestaSeleccionada.preguntas.length - 1}>
+                                    Siguiente Pregunta
+                                </button>
+                            </div>
+                            <button onClick={Respuestas}>Enviar</button>
                         </div>
                     ) :
                         (

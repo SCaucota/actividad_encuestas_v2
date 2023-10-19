@@ -66,7 +66,7 @@ const CrearEncuesta = ({ agregarEncuesta}) => {
 
     return (
         <div>
-            <h1>Nueva Encuesta</h1>
+            <h2>Nueva Encuesta</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <label>Título:</label>
                 <input
