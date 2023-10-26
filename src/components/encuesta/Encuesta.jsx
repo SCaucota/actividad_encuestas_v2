@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import './encuesta.css';
 
 const Encuesta = ({ lista }) => {
 
     const { id } = useParams();
 
     const [preguntaActualId, setPreguntaActualId] = useState(0);
-    const [opcionSeleccionada, setOpcionSeleccionada] = useState({});
 
     const encuestaSeleccionada = lista.find((enc) => enc.id === parseInt(id));
-    const preguntaActual = encuestaSeleccionada.preguntas[preguntaActualId];
+
+    if (!encuestaSeleccionada) {
+        return <h1>Encuesta no encontrada</h1>;
+    }
+
+    const preguntaActual = encuestaSeleccionada && encuestaSeleccionada.preguntas ? encuestaSeleccionada.preguntas[preguntaActualId] : null;
 
     const handleSiguientePregunta = () => {
         if (preguntaActual.id === preguntaActualId + 1) {
@@ -23,66 +28,66 @@ const Encuesta = ({ lista }) => {
         }
     };
 
-    const handleOptionsState = (questionId, optionId) => {
-        setOpcionSeleccionada({
-            ...opcionSeleccionada,
-            [questionId]: optionId,
-        });
-    };
-
-    const Respuestas = () => {
-        if(opcionSeleccionada === preguntaActual.id)
-        console.log(preguntaActual.opciones);
-    }
-
-
     return (
-        <div>
-            <h2>{encuestaSeleccionada.titulo}: </h2>
-            <h3>{encuestaSeleccionada.descripcion}</h3>
-            <div>
-                {
-                    preguntaActual ? (
+        <div className="encuestaContainer">
+            {
+                !encuestaSeleccionada ?
+                    <h1>Encuesta no encontrada</h1> :
+                    <div>
+                        <h2 className="encuestaTitulo">{encuestaSeleccionada.titulo}: </h2>
+                        <h3 className="encuestaDescripcion">{encuestaSeleccionada.descripcion}</h3>
                         <div>
-                            <h3>Pregunta {preguntaActual.id}</h3>
-                            <h4>{preguntaActual.preguntas}</h4>
-                            <div>
-                                {
-                                    preguntaActual.opciones.map((opcion) => (
-                                        <div key={opcion.id}>
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name={`pregunta${preguntaActual.id}`}
-                                                    value={opcion.id}
-                                                    checked={opcionSeleccionada[preguntaActual.id] === opcion.id}
-                                                    onChange={() => handleOptionsState(preguntaActual.id, opcion.id)}
-                                                />
-                                                {opcion.texto}
-                                            </label>
+                            {
+                                preguntaActual ? (
+                                    <div>
+                                        <h3>Pregunta {preguntaActual.id}</h3>
+                                        <h4 className="preguntaTexto">{preguntaActual.preguntas}</h4>
+                                        <div className="opcionesContainer">
+                                            {
+                                                preguntaActual.opciones.map((opcion) => (
+                                                    <div key={opcion.id} className="opcion-item">
+                                                        <label>
+                                                            <li>{opcion.texto}</li>
+                                                        </label>
+                                                    </div>
+                                                ))
+                                            }
                                         </div>
-                                    ))
-                                }
-                            </div>
-                            <div>
-                                <button onClick={handlePreguntaAnterior} disabled={preguntaActualId === 0}>
-                                    Pregunta Anterior
-                                </button>
-                                <button onClick={handleSiguientePregunta} disabled={preguntaActualId === encuestaSeleccionada.preguntas.length - 1}>
-                                    Siguiente Pregunta
-                                </button>
-                            </div>
-                            <button onClick={Respuestas}>Enviar</button>
-                        </div>
-                    ) :
-                        (
-                            <h1>Encuesta Inexistente</h1>
-                        )
-                }
+                                        <div className="botonesNavegacion">
+                                            <button
+                                                onClick={handlePreguntaAnterior}
+                                                disabled={preguntaActualId === 0}
+                                                className="botonNavegacion"
+                                            >
+                                                Pregunta Anterior
+                                            </button>
 
-            </div>
-        </div >
+                                            <button
+                                                onClick={handleSiguientePregunta}
+                                                disabled={preguntaActualId === encuestaSeleccionada.preguntas.length - 1}
+                                                className="botonNavegacion"
+                                            >
+                                                Siguiente Pregunta
+                                            </button>
+
+                                        </div>
+                                        <div className='volverContainer'>
+                                            <Link to={'/'}>
+                                                <button className="volverBoton">Volver Atrás</button>
+                                            </Link>
+                                        </div>
+
+                                    </div>
+                                ) :
+                                    (
+                                        <h1>Encuesta Inexistente</h1>
+                                    )
+                            }
+                        </div>
+                    </div>
+            }
+        </div>
     )
 }
 
-export default Encuesta
+export default Encuesta;

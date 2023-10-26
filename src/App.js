@@ -13,9 +13,8 @@ function App() {
   const [listaEncuestas, setListaEncuestas ] = useState(encuestas);
 
   const agregarEncuesta = (nuevaEncuesta) => {
-    const ultimaEncuesta = listaEncuestas[listaEncuestas.length - 1];
-    nuevaEncuesta.id = ultimaEncuesta.id + 1;
-    setListaEncuestas([nuevaEncuesta, ...listaEncuestas]);
+    nuevaEncuesta.id = listaEncuestas.length + 1
+    setListaEncuestas([...listaEncuestas, nuevaEncuesta]);
   };
 
   return (

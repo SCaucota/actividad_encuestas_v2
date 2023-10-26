@@ -1,0 +1,28 @@
+.listaEncuestasContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.encuestaLink {
+    text-decoration: none;
+    color: #333;
+}
+
+.encuestaCard {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.encuestaTitulo {
+    font-size: 1.5rem;
+    background-color: rgb(233, 204, 209);
+    padding: 1em 1em;
+    margin: 0em;
+}
+
+.encuestaDescripcion {
+    font-size: 1rem;
+}

@@ -1,39 +1,64 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import './crearEncuesta.css';
 
-const CrearEncuesta = ({ agregarEncuesta}) => {
-
+const CrearEncuesta = ({ agregarEncuesta }) => {
     const [preguntas, setPreguntas] = useState([]);
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    const minimoDeOpciones = () => {
+        for (const pregunta of preguntas) {
+            if (pregunta.opciones.length < 2) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     const onSubmit = (data) => {
+        setError('');
 
-        let preguntaId = 1;
-        let opcionId = 1;
+        if (!data.preguntas || data.preguntas.length === 0) {
+            setError('Debes agregar al menos una pregunta a la encuesta');
+            return;
+        }
 
-        const encuestaNueva = {
-            titulo: data.titulo,
-            descripcion: data.descripcion,
-            preguntas: data.preguntas.map((pregunta, preguntaIndex) => ({
-                id: preguntaId++,
-                preguntas: pregunta.pregunta,
-                opciones: pregunta.opciones.map((opcion, opcionIndex) =>  ({
-                    id: opcionId++,
-                    texto: opcion.texto,
-                })),
-            })),
-        };
+        const todasLasPreguntasCumplen = data.preguntas.every(minimoDeOpciones);
 
-        agregarEncuesta(encuestaNueva);
+        if (!todasLasPreguntasCumplen) {
+            setError('Todas las preguntas deben tener al menos 2 opciones');
+            return;
+        } else {
+            let preguntaId = 1;
+            const encuestaNueva = {
+                titulo: data.titulo,
+                descripcion: data.descripcion,
+                preguntas: data.preguntas.map((pregunta) => {
+                    let opcionId = 1;
+                    const preguntaNueva = {
+                        id: preguntaId++,
+                        preguntas: pregunta.pregunta,
+                        opciones: pregunta.opciones.map((opcion) => ({
+                            id: opcionId++,
+                            texto: opcion.texto,
+                        })),
+                    };
+                    return preguntaNueva;
+                }),
+            };
 
-        navigate('/');
+            console.log(encuestaNueva);
+            agregarEncuesta(encuestaNueva);
+            navigate('/');
+        }
     };
 
     const agregarNuevaPregunta = () => {
+        setError('');
         setPreguntas([
             ...preguntas,
             {
@@ -55,7 +80,7 @@ const CrearEncuesta = ({ agregarEncuesta}) => {
             texto: '',
         });
         setPreguntas(nuevasPreguntas);
-        
+
     };
 
     const eliminarOpcion = (preguntaIndex, opcionIndex) => {
@@ -65,9 +90,14 @@ const CrearEncuesta = ({ agregarEncuesta}) => {
     };
 
     return (
-        <div>
-            <h2>Nueva Encuesta</h2>
+        <div className='crearEncuestaContainer'>
+            <h2 className='titulo'>Nueva Encuesta</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
+                {error && (
+                    <div className="errorMessage">
+                        <h4>{error}</h4>
+                    </div>
+                )}
                 <label>Título:</label>
                 <input
                     type="text"
@@ -75,7 +105,7 @@ const CrearEncuesta = ({ agregarEncuesta}) => {
                     name='titulo'
                     {...register('titulo', { required: 'Campo obligatorio', maxLength: { value: 50, message: 'Superaste el máximo de 50 caractéres' } })}
                 />
-                {errors.titulo && <p>{errors.titulo.message}</p>}
+                {errors.titulo && <p className='errorMessage'>{errors.titulo.message}</p>}
                 <label>Descripción:</label>
                 <textarea
                     name="descripcion"
@@ -85,55 +115,59 @@ const CrearEncuesta = ({ agregarEncuesta}) => {
                     {...register('descripcion', { required: 'Campo Obligatorio', maxLength: { value: 150, message: 'Superaste el máximo de 150 caractéres' } })}
                 />
                 {errors.descripcion && <p>{errors.descripcion.message}</p>}
-                <label>Preguntas:</label>
+                <label className='tituloPreguntasContainer'>Preguntas:</label>
                 {
                     preguntas.map((pregunta, preguntaIndex) => (
-                            <div key={preguntaIndex}>
-                                <input
-                                    type="text"
-                                    id={`pregunta${pregunta.id}`}
-                                    name={`preguntas[${preguntaIndex}].pregunta`}
-                                    {...register(`preguntas[${preguntaIndex}].pregunta`, {
-                                        required: 'Campo obligatorio',
-                                        maxLength: { value: 50, message: 'Superaste el máximo de 50 caracteres' },
-                                    })}
-                                />
-                                {errors.preguntas?.[preguntaIndex]?.pregunta && (
-                                    <p>{errors.preguntas[preguntaIndex].pregunta.message}</p>
-                                )}
-                                <div>
-                                    {pregunta.opciones.map((opcion, opcionIndex) => (
-                                        <div key={opcionIndex}>
-                                            <input
-                                                type="text"
-                                                id={`opcion${opcion.id}`}
-                                                name={`preguntas[${preguntaIndex}].opciones[${opcionIndex}].texto`}
-                                                {...register(`preguntas[${preguntaIndex}].opciones[${opcionIndex}].texto`, {
-                                                    required: 'Campo obligatorio',
-                                                    maxLength: { value: 20, message: 'Superaste el máximo de 20 caracteres' },
-                                                })}
-                                            />
-                                            {errors.preguntas?.[preguntaIndex]?.opciones?.[opcionIndex]?.texto && (
-                                                <p>{errors.preguntas[preguntaIndex].opciones[opcionIndex].texto.message}</p>
-                                            )}
-                                            <button type="button" onClick={() => eliminarOpcion(preguntaIndex, opcionIndex)}>
-                                                Eliminar Opción
-                                            </button>
-                                        </div>
-                                    ))}
-                                    <button type="button" onClick={() => agregarOpcion(preguntaIndex)}>
-                                        Agregar Opción
-                                    </button>
-                                </div>
-                                <button type="button" onClick={() => eliminarPregunta(preguntaIndex)}>
-                                    Eliminar Pregunta
+                        <div className='preguntaSection' key={preguntaIndex}>
+                            <input
+                                type="text"
+                                placeholder='Pregunta'
+                                id={`pregunta${pregunta.id}`}
+                                name={`preguntas[${preguntaIndex}].pregunta`}
+                                {...register(`preguntas[${preguntaIndex}].pregunta`, {
+                                    required: 'Campo obligatorio',
+                                    maxLength: { value: 50, message: 'Superaste el máximo de 50 caracteres' },
+                                })}
+                            />
+                            {errors.preguntas?.[preguntaIndex]?.pregunta && (
+                                <p className='errorMessage'>{errors.preguntas[preguntaIndex].pregunta.message}</p>
+                            )}
+                            <div className='opcionSection'>
+                                {pregunta.opciones.map((opcion, opcionIndex) => (
+                                    <div className='inputOptionButton' key={opcionIndex}>
+                                        <input
+                                            type="text"
+                                            id={`opcion${opcion.id}`}
+                                            name={`preguntas[${preguntaIndex}].opciones[${opcionIndex}].texto`}
+                                            {...register(`preguntas[${preguntaIndex}].opciones[${opcionIndex}].texto`, {
+                                                required: 'Campo obligatorio',
+                                                maxLength: { value: 20, message: 'Superaste el máximo de 20 caracteres' },
+                                            })}
+                                        />
+                                        {errors.preguntas?.[preguntaIndex]?.opciones?.[opcionIndex]?.texto && (
+                                            <p className='errorMessage'>{errors.preguntas[preguntaIndex].opciones[opcionIndex].texto.message}</p>
+                                        )}
+                                        <button className='boton deleteButon' type="button" onClick={() => eliminarOpcion(preguntaIndex, opcionIndex)}>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                ))}
+                                <button className='boton' type="button" onClick={() => agregarOpcion(preguntaIndex)}>
+                                    Agregar Opción
                                 </button>
                             </div>
+                            <button className='boton deleteButon' type="button" onClick={() => eliminarPregunta(preguntaIndex)}>
+                                Eliminar Pregunta
+                            </button>
+                        </div>
                     ))
                 }
-                <button type='button' onClick={agregarNuevaPregunta}>Agregar Pregunta</button>
-                <button type='submit' >CrearEncuesta</button>
-        </form>
+                <div className='agregarCrearContainer'>
+                    <button className='boton botonAC' type='button' onClick={agregarNuevaPregunta}>Agregar Pregunta</button>
+                    <button className='boton botonAC' type='submit' >CrearEncuesta</button>
+                </div>
+
+            </form>
         </div >
     )
 }

@@ -1,0 +1,65 @@
+.encuestaContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.encuestaTitulo {
+    font-size: 1.5rem;
+}
+
+.encuestaDescripcion {
+    font-size: 1rem;
+}
+
+.preguntaTexto {
+    font-weight: bold;
+}
+
+.opcionesContainer {
+    margin-top: 20px;
+}
+
+.opcionItem {
+    margin: 10px 0;
+}
+
+.botonesNavegacion {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4em;
+    margin: 5% 20% 5% 20%
+}
+
+.botonNavegacion {
+    background-color: rgb(157, 143, 211);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.botonNavegacion:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.volverContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volverBoton {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
