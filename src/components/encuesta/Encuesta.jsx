@@ -11,7 +11,7 @@ const Encuesta = ({ lista }) => {
     const encuestaSeleccionada = lista.find((enc) => enc.id === parseInt(id));
 
     if (!encuestaSeleccionada) {
-        return <h1>Encuesta no encontrada</h1>;
+        return <h1 className='error'>Encuesta no encontrada</h1>;
     }
 
     const preguntaActual = encuestaSeleccionada && encuestaSeleccionada.preguntas ? encuestaSeleccionada.preguntas[preguntaActualId] : null;

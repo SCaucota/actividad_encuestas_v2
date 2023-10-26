@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavBar from './components/navbar/NavBar';
 import ListaEncuestas from './components/listaEncuestas/ListaEncuestas';

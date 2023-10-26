@@ -20,6 +20,7 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
     };
 
     const onSubmit = (data) => {
+        
         setError('');
 
         if (!data.preguntas || data.preguntas.length === 0) {
@@ -50,8 +51,6 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
                     return preguntaNueva;
                 }),
             };
-
-            console.log(encuestaNueva);
             agregarEncuesta(encuestaNueva);
             navigate('/');
         }
@@ -68,12 +67,6 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
         ])
     };
 
-    const eliminarPregunta = (preguntaIndex) => {
-        const nuevasPreguntas = [...preguntas];
-        nuevasPreguntas.splice(preguntaIndex, 1);
-        setPreguntas(nuevasPreguntas);
-    };
-
     const agregarOpcion = (preguntaIndex) => {
         const nuevasPreguntas = [...preguntas];
         nuevasPreguntas[preguntaIndex].opciones.push({
@@ -83,18 +76,12 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
 
     };
 
-    const eliminarOpcion = (preguntaIndex, opcionIndex) => {
-        const nuevasPreguntas = [...preguntas];
-        nuevasPreguntas[preguntaIndex].opciones.splice(opcionIndex, 1);
-        setPreguntas(nuevasPreguntas);
-    };
-
     return (
         <div className='crearEncuestaContainer'>
             <h2 className='titulo'>Nueva Encuesta</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {error && (
-                    <div className="errorMessage">
+                    <div className="mensajeError">
                         <h4>{error}</h4>
                     </div>
                 )}
@@ -105,16 +92,16 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
                     name='titulo'
                     {...register('titulo', { required: 'Campo obligatorio', maxLength: { value: 50, message: 'Superaste el máximo de 50 caractéres' } })}
                 />
-                {errors.titulo && <p className='errorMessage'>{errors.titulo.message}</p>}
+                {errors.titulo && <p className='mensajeError'>{errors.titulo.message}</p>}
                 <label>Descripción:</label>
                 <textarea
                     name="descripcion"
                     id="descripcion"
                     cols="30"
-                    rows="10"
+                    rows="5"
                     {...register('descripcion', { required: 'Campo Obligatorio', maxLength: { value: 150, message: 'Superaste el máximo de 150 caractéres' } })}
                 />
-                {errors.descripcion && <p>{errors.descripcion.message}</p>}
+                {errors.descripcion && <p className='mensajeError' >{errors.descripcion.message}</p>}
                 <label className='tituloPreguntasContainer'>Preguntas:</label>
                 {
                     preguntas.map((pregunta, preguntaIndex) => (
@@ -130,7 +117,7 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
                                 })}
                             />
                             {errors.preguntas?.[preguntaIndex]?.pregunta && (
-                                <p className='errorMessage'>{errors.preguntas[preguntaIndex].pregunta.message}</p>
+                                <p className='mensajeError'>{errors.preguntas[preguntaIndex].pregunta.message}</p>
                             )}
                             <div className='opcionSection'>
                                 {pregunta.opciones.map((opcion, opcionIndex) => (
@@ -145,20 +132,14 @@ const CrearEncuesta = ({ agregarEncuesta }) => {
                                             })}
                                         />
                                         {errors.preguntas?.[preguntaIndex]?.opciones?.[opcionIndex]?.texto && (
-                                            <p className='errorMessage'>{errors.preguntas[preguntaIndex].opciones[opcionIndex].texto.message}</p>
+                                            <p className='mensajeError'>{errors.preguntas[preguntaIndex].opciones[opcionIndex].texto.message}</p>
                                         )}
-                                        <button className='boton deleteButon' type="button" onClick={() => eliminarOpcion(preguntaIndex, opcionIndex)}>
-                                            Eliminar
-                                        </button>
                                     </div>
                                 ))}
                                 <button className='boton' type="button" onClick={() => agregarOpcion(preguntaIndex)}>
                                     Agregar Opción
                                 </button>
                             </div>
-                            <button className='boton deleteButon' type="button" onClick={() => eliminarPregunta(preguntaIndex)}>
-                                Eliminar Pregunta
-                            </button>
                         </div>
                     ))
                 }

@@ -63,3 +63,8 @@
     padding: 10px 20px;
     cursor: pointer;
 }
+
+.error{
+    color: #ff6347;
+    text-align: center;
+}
